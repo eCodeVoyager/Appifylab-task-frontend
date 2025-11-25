@@ -1,14 +1,21 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 const Login = () => {
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Login submitted:", { email, password, rememberMe });
+    const userData = {
+      email,
+      name: email.split("@")[0],
+      id: Date.now(),
+    };
+    login(userData);
   };
 
   const handleGoogleSignIn = () => {

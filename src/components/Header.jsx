@@ -1,4 +1,13 @@
+import { useAuth } from "../hooks/useAuth";
+
 const Header = () => {
+  const { logout, user } = useAuth();
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    logout();
+  };
+
   return (
     <>
       {/* Desktop Menu */}
@@ -350,7 +359,7 @@ const Header = () => {
                 />
               </div>
               <div className="_header_nav_dropdown">
-                <p className="_header_nav_para">Dylan Field</p>
+                <p className="_header_nav_para">{user?.name || user?.email || "User"}</p>
                 <button
                   id="_profile_drop_show_btn"
                   className="_header_nav_dropdown_btn _dropdown_toggle"
@@ -384,7 +393,7 @@ const Header = () => {
                     />
                   </div>
                   <div className="_nav_profile_dropdown_info_txt">
-                    <h4 className="_nav_dropdown_title">Dylan Field</h4>
+                    <h4 className="_nav_dropdown_title">{user?.name || user?.email || "User"}</h4>
                     <a href="profile.html" className="_nav_drop_profile">
                       View Profile
                     </a>
@@ -475,7 +484,7 @@ const Header = () => {
                     </a>
                   </li>
                   <li className="_nav_dropdown_list_item">
-                    <a href="#0" className="_nav_dropdown_link">
+                    <a href="#0" className="_nav_dropdown_link" onClick={handleLogout}>
                       <div className="_nav_drop_info">
                         <span>
                           <svg
