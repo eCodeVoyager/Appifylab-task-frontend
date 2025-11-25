@@ -10,11 +10,19 @@ const AuthService = {
         const { accessToken, refreshToken, user } = response.data;
         
         if (accessToken) {
-          Cookies.set("accessToken", accessToken, { expires: 7 });
+          Cookies.set("accessToken", accessToken, { 
+            expires: 7,
+            path: "/",
+            sameSite: "Lax"
+          });
         }
         
         if (refreshToken) {
-          Cookies.set("refreshToken", refreshToken, { expires: 30 });
+          Cookies.set("refreshToken", refreshToken, { 
+            expires: 30,
+            path: "/",
+            sameSite: "Lax"
+          });
         }
         
         return user;
@@ -35,11 +43,19 @@ const AuthService = {
         const { accessToken, refreshToken, user } = response.data;
         
         if (accessToken) {
-          Cookies.set("accessToken", accessToken, { expires: 7 });
+          Cookies.set("accessToken", accessToken, { 
+            expires: 7,
+            path: "/",
+            sameSite: "Lax"
+          });
         }
         
         if (refreshToken) {
-          Cookies.set("refreshToken", refreshToken, { expires: 30 });
+          Cookies.set("refreshToken", refreshToken, { 
+            expires: 30,
+            path: "/",
+            sameSite: "Lax"
+          });
         }
         
         return user;
@@ -72,8 +88,8 @@ const AuthService = {
   },
 
   logout: () => {
-    Cookies.remove("accessToken");
-    Cookies.remove("refreshToken");
+    Cookies.remove("accessToken", { path: "/" });
+    Cookies.remove("refreshToken", { path: "/" });
   },
 
   refreshToken: async () => {
@@ -89,11 +105,19 @@ const AuthService = {
       const { accessToken, refreshToken: newRefreshToken } = response.data;
       
       if (accessToken) {
-        Cookies.set("accessToken", accessToken, { expires: 7 });
+        Cookies.set("accessToken", accessToken, { 
+          expires: 7,
+          path: "/",
+          sameSite: "Lax"
+        });
       }
       
       if (newRefreshToken) {
-        Cookies.set("refreshToken", newRefreshToken, { expires: 30 });
+        Cookies.set("refreshToken", newRefreshToken, { 
+          expires: 30,
+          path: "/",
+          sameSite: "Lax"
+        });
       }
       
       return true;
@@ -104,3 +128,4 @@ const AuthService = {
 };
 
 export default AuthService;
+

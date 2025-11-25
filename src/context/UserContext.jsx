@@ -1,4 +1,4 @@
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext, useCallback } from "react";
 import AuthService from "../services/authService";
 
 const UserContext = createContext(null);
@@ -7,7 +7,7 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const fetchUser = async () => {
+  const fetchUser = useCallback(async () => {
     setLoading(true);
     try {
       const userData = await AuthService.getCurrentUser();
@@ -19,15 +19,15 @@ export const UserProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const clearUser = () => {
+  const clearUser = useCallback(() => {
     setUser(null);
-  };
+  }, []);
 
-  const updateUserData = (data) => {
+  const updateUserData = useCallback((data) => {
     setUser((prev) => ({ ...prev, ...data }));
-  };
+  }, []);
 
   const value = {
     user,

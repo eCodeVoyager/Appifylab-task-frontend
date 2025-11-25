@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { usePost } from "../context/PostContext";
 import Header from "../components/Header";
 import LeftSidebar from "../components/LeftSidebar";
 import RightSidebar from "../components/RightSidebar";
@@ -8,32 +9,20 @@ import TimelinePost from "../components/TimelinePost";
 
 const Feed = () => {
   const [darkMode, setDarkMode] = useState(false);
-  const [posts] = useState([
-    {
-      id: 1,
-      authorName: "Karim Saif",
-      authorImage: "assets/images/post_img.png",
-      time: "5 minute ago",
-      privacy: "Public",
-      title: "-Healthy Tracking App",
-      image: "assets/images/timeline_img.png",
-      reactCount: "9+",
-      commentCount: "12",
-      shareCount: "122",
-    },
-    {
-      id: 2,
-      authorName: "Karim Saif",
-      authorImage: "assets/images/post_img.png",
-      time: "5 minute ago",
-      privacy: "Public",
-      title: "-Healthy Tracking App",
-      image: "assets/images/timeline_img.png",
-      reactCount: "9+",
-      commentCount: "12",
-      shareCount: "122",
-    },
-  ]);
+  const { posts, loading, fetchFeed } = usePost();
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const loadFeed = async () => {
+      try {
+        await fetchFeed(1, 10);
+      } catch (err) {
+        setError(err.message || "Failed to load feed");
+      }
+    };
+
+    loadFeed();
+  }, [fetchFeed]);
 
   useEffect(() => {
     // Notification dropdown functionality
@@ -157,16 +146,37 @@ const Feed = () => {
                 <LeftSidebar />
               </div>
 
-              {/* Middle Content Area */}
               <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12">
                 <div className="_layout_middle_wrap">
                   <div className="_layout_middle_inner">
                     <StoryCards />
                     <CreatePost />
 
+                    {/* Error Message */}
+                    {error && (
+                      <div className="alert alert-danger" role="alert">
+                        {error}
+                      </div>
+                    )}
+
+                    {/* Loading Spinner */}
+                    {loading && (
+                      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "200px" }}>
+                        <div className="spinner-border" role="status">
+                          <span className="visually-hidden">Loading...</span>
+                        </div>
+                      </div>
+                    )}
+
                     {/* Timeline Posts */}
-                    {posts.map((post) => (
-                      <TimelinePost key={post.id} post={post} />
+                    {!loading && posts.length === 0 && !error && (
+                      <div className="text-center" style={{ padding: "50px 0" }}>
+                        <p>No posts yet. Be the first to create one!</p>
+                      </div>
+                    )}
+
+                    {!loading && posts.map((post) => (
+                      <TimelinePost key={post._id} post={post} />
                     ))}
                   </div>
                 </div>
