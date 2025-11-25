@@ -1,16 +1,66 @@
-# React + Vite
+# Buddy Script - React Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Project Setup Complete ✓
 
-Currently, two official plugins are available:
+### Structure Created:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```
+frontend/
+├── public/
+│   └── assets/
+│       ├── css/          (ready for Bootstrap & custom CSS)
+│       ├── js/           (ready for Bootstrap JS)
+│       └── images/       (ready for images/SVGs)
+├── src/
+│   ├── components/       (reusable components)
+│   ├── pages/
+│   │   └── Login.jsx     ✓ Created
+│   ├── services/         (API calls)
+│   ├── utils/            (helper functions)
+│   ├── App.jsx           ✓ Updated with routing
+│   └── main.jsx          ✓ Updated
+├── index.html            ✓ Updated with Bootstrap links
+└── package.json          ✓ React Router installed
+```
 
-## React Compiler
+### What's Done:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- ✓ Vite + React initialized
+- ✓ React Router DOM installed
+- ✓ Folder structure created
+- ✓ Login page converted to React component
+- ✓ Routing configured (/ redirects to /login)
+- ✓ index.html updated with Bootstrap and custom CSS links
+- ✓ Form state management added (email, password, rememberMe)
 
-## Expanding the ESLint configuration
+### Next Steps:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. **Copy Assets** (REQUIRED before running):
+
+   - See `public/assets/ASSETS_README.md` for instructions
+   - Copy CSS, JS, and image files from original HTML project
+
+2. **Test the Setup**:
+
+   ```bash
+   npm run dev
+   ```
+
+3. **Future Pages**:
+   - Register page conversion
+   - Feed page conversion
+   - Backend integration
+
+### Tech Stack:
+
+- React 19.2.0
+- Vite 7.2.4
+- React Router DOM 7.9.6
+- Bootstrap (via static files)
+
+### Notes:
+
+- UI maintains exact class names from original HTML
+- Changed radio to checkbox for "Remember me" (more appropriate)
+- Changed anchor tag to React Router Link for "Create New Account"
+- Form handlers ready for backend integration
