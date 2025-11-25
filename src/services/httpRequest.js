@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 import axios from "axios";
 
-const BASE_URL = `${import.meta.env.VITE_BACKEND_API_URL || 'http://localhost:3000'}/api/v1`;
+const BASE_URL = `${import.meta.env.VITE_BACKEND_API_URL || 'http://localhost:3000'}/api`;
 const instance = axios.create({
   baseURL: BASE_URL,
   timeout: 30000,
@@ -28,12 +28,48 @@ instance.interceptors.response.use(
   function (response) {
     return response;
   },
-  function (error) {
-    if (error.response?.status === 401) {
+  async function (error) {
+    const originalRequest = error.config;
+    
+    const isAuthEndpoint = originalRequest.url?.includes('/auth/login') || 
+                          originalRequest.url?.includes('/auth/register');
+    
+    if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
+      originalRequest._retry = true;
+      
+      const refreshToken = Cookies.get("refreshToken");
+      
+      if (refreshToken) {
+        try {
+          const response = await instance.post("/auth/refresh", { refreshToken });
+          
+          if (response.data?.success && response.data?.data) {
+            const { accessToken, refreshToken: newRefreshToken } = response.data.data;
+            
+            if (accessToken) {
+              Cookies.set("accessToken", accessToken, { expires: 7 });
+              originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+            }
+            
+            if (newRefreshToken) {
+              Cookies.set("refreshToken", newRefreshToken, { expires: 30 });
+            }
+            
+            return instance(originalRequest);
+          }
+        } catch (refreshError) {
+          Cookies.remove("accessToken");
+          Cookies.remove("refreshToken");
+          window.location.href = "/login";
+          return Promise.reject(refreshError);
+        }
+      }
+      
       Cookies.remove("accessToken");
       Cookies.remove("refreshToken");
       window.location.href = "/login";
     }
+    
     return Promise.reject(error);
   }
 );

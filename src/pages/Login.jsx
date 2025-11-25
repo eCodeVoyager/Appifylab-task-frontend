@@ -7,15 +7,28 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const userData = {
-      email,
-      name: email.split("@")[0],
-      id: Date.now(),
-    };
-    login(userData);
+    setError("");
+    setLoading(true);
+
+    try {
+      const result = await login(email, password);
+      if (!result.success) {
+        setError(result.error || "Login failed. Please try again.");
+      }
+    } catch (err) {
+      const errorMessage = 
+        err.response?.data?.message || 
+        err.message || 
+        "An unexpected error occurred. Please try again.";
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleGoogleSignIn = () => {
@@ -93,6 +106,11 @@ const Login = () => {
                   <span>Or</span>
                 </div>
                 <form className="_social_login_form" onSubmit={handleSubmit}>
+                  {error && (
+                    <div className="alert alert-danger" role="alert">
+                      {error}
+                    </div>
+                  )}
                   <div className="row">
                     <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                       <div className="_social_login_form_input _mar_b14">
@@ -154,8 +172,9 @@ const Login = () => {
                         <button
                           type="submit"
                           className="_social_login_form_btn_link _btn1"
+                          disabled={loading}
                         >
-                          Login now
+                          {loading ? "Logging in..." : "Login now"}
                         </button>
                       </div>
                     </div>

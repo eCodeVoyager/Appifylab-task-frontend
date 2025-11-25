@@ -1,33 +1,70 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Auth from "../services/authService";
 
 export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
-  
-  // Initialize state from localStorage
-  const [user, setUser] = useState(() => {
-    const storedUser = localStorage.getItem("user");
-    return storedUser ? JSON.parse(storedUser) : null;
-  });
-  const loading = false;
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const login = (userData) => {
-    setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
-    navigate("/feed");
+  // Check authentication on mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      if (Auth.isAuthenticated()) {
+        try {
+          const userData = await Auth.getCurrentUser();
+          if (userData) {
+            setUser(userData);
+          }
+        } catch {
+        }
+      }
+      setLoading(false);
+    };
+
+    checkAuth();
+  }, []);
+
+  const login = async (email, password) => {
+    try {
+      const userData = await Auth.login(email, password);
+      setUser(userData);
+      navigate("/feed");
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message || "Login failed",
+      };
+    }
+  };
+
+  const register = async (userData) => {
+    try {
+      const user = await Auth.register(userData);
+      setUser(user);
+      navigate("/feed");
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message || "Registration failed",
+      };
+    }
   };
 
   const logout = () => {
+    Auth.logout();
     setUser(null);
-    localStorage.removeItem("user");
     navigate("/login");
   };
 
   const value = {
     user,
     login,
+    register,
     logout,
     loading,
   };
