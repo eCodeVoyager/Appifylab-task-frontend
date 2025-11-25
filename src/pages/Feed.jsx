@@ -7,6 +7,7 @@ import CreatePost from "../components/CreatePost";
 import TimelinePost from "../components/TimelinePost";
 
 const Feed = () => {
+  const [darkMode, setDarkMode] = useState(false);
   const [posts] = useState([
     {
       id: 1,
@@ -38,32 +39,71 @@ const Feed = () => {
     // Notification dropdown functionality
     const notifyDropdown = document.querySelector("#_notify_drop");
     const notifyDropShowBtn = document.querySelector("#_notify_btn");
-    
+
     if (notifyDropShowBtn && notifyDropdown) {
       let isDropShow1 = false;
-      
+
       const handleNotifyClick = () => {
         isDropShow1 = !isDropShow1;
-        if(isDropShow1){
-          notifyDropdown.classList.add('show');
+        if (isDropShow1) {
+          notifyDropdown.classList.add("show");
         } else {
-          notifyDropdown.classList.remove('show');
+          notifyDropdown.classList.remove("show");
         }
       };
-      
+
       notifyDropShowBtn.addEventListener("click", handleNotifyClick);
-      
+
       return () => {
         notifyDropShowBtn.removeEventListener("click", handleNotifyClick);
       };
     }
   }, []);
 
+  useEffect(() => {
+    // Profile dropdown functionality
+    const profileDropdown = document.querySelector("#_prfoile_drop");
+    const profileDropShowBtn = document.querySelector(
+      "#_profile_drop_show_btn"
+    );
+
+    if (profileDropShowBtn && profileDropdown) {
+      let isDropShow = false;
+
+      const handleProfileClick = () => {
+        isDropShow = !isDropShow;
+        if (isDropShow) {
+          profileDropdown.classList.add("show");
+        } else {
+          profileDropdown.classList.remove("show");
+        }
+      };
+
+      profileDropShowBtn.addEventListener("click", handleProfileClick);
+
+      return () => {
+        profileDropShowBtn.removeEventListener("click", handleProfileClick);
+      };
+    }
+  }, []);
+
+  const handleThemeToggle = () => {
+    setDarkMode(!darkMode);
+  };
+
   return (
-    <div className="_layout _layout_main_wrapper">
+    <div
+      className={`_layout _layout_main_wrapper${
+        darkMode ? " _dark_wrapper" : ""
+      }`}
+    >
       {/* Theme Switcher Button */}
       <div className="_layout_mode_swithing_btn">
-        <button type="button" className="_layout_swithing_btn_link">
+        <button
+          type="button"
+          className="_layout_swithing_btn_link"
+          onClick={handleThemeToggle}
+        >
           <div className="_layout_swithing_btn">
             <div className="_layout_swithing_btn_round"></div>
           </div>
