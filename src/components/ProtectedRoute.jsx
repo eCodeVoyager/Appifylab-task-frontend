@@ -1,8 +1,16 @@
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
+import { useEffect } from "react";
+import { useUser } from "../context/UserContext";
+import AuthService from "../services/authService";
 
 const ProtectedRoute = ({ children }) => {
-  const { user, loading } = useAuth();
+  const { user, loading, fetchUser } = useUser();
+
+  useEffect(() => {
+    if (AuthService.isAuthenticated() && !user && !loading) {
+      fetchUser();
+    }
+  }, [user, loading, fetchUser]);
 
   if (loading) {
     return (
@@ -14,7 +22,7 @@ const ProtectedRoute = ({ children }) => {
     );
   }
 
-  if (!user) {
+  if (!AuthService.isAuthenticated() || !user) {
     return <Navigate to="/login" replace />;
   }
 

@@ -1,7 +1,9 @@
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../context/AuthContext";
+import { useUser } from "../context/UserContext";
 
 const Header = () => {
-  const { logout, user } = useAuth();
+  const { logout } = useAuth();
+  const { user } = useUser();
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -359,7 +361,9 @@ const Header = () => {
                 />
               </div>
               <div className="_header_nav_dropdown">
-                <p className="_header_nav_para">{user?.name || user?.email || "User"}</p>
+                <p className="_header_nav_para">
+                  {user ? `${user.firstName} ${user.lastName}` : "User"}
+                </p>
                 <button
                   id="_profile_drop_show_btn"
                   className="_header_nav_dropdown_btn _dropdown_toggle"
@@ -393,7 +397,9 @@ const Header = () => {
                     />
                   </div>
                   <div className="_nav_profile_dropdown_info_txt">
-                    <h4 className="_nav_dropdown_title">{user?.name || user?.email || "User"}</h4>
+                    <h4 className="_nav_dropdown_title">
+                      {user ? `${user.firstName} ${user.lastName}` : "User"}
+                    </h4>
                     <a href="profile.html" className="_nav_drop_profile">
                       View Profile
                     </a>
