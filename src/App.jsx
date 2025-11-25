@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Feed from "./pages/Feed";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/feed" element={<Feed />} />
         <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
